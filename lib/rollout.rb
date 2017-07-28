@@ -22,6 +22,7 @@ class Rollout
 
     def deactivate_all(feature)
         @redis.del(group_key(feature))
+        @redis.del(user_key(feature))
     end
 
     def define_group(group, &block)
