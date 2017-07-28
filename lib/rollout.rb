@@ -16,6 +16,10 @@ class Rollout
         @redis.sadd(user_key(feature), user.id)
     end
 
+    def deactivate_user(feature, user)
+        @redis.srem(user_key(feature), user.id)
+    end
+
     def deactivate_all(feature)
         @redis.del(group_key(feature))
     end
