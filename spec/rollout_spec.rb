@@ -105,4 +105,15 @@ describe "Rollout" do
             (1..120).select { |id| @rollout.should be_active(:chat, stub(:id => id)) }.count.should == 24
         end
     end
+
+    describe "deactivating the percentage of users" do
+        before do
+            @rollout.activate_percentage(:chat, 100)
+            @rollout.deactivate_percentage(:chat)
+        end
+
+        it "becomes inactive for all users" do
+            @rollout.should_not be_active(:chat, stub(:id => 24))
+        end
+    end
 end

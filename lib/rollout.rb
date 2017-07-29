@@ -24,6 +24,10 @@ class Rollout
         @redis.set(percentage_key(feature), percentage)
     end
 
+    def deactivate_percentage(feature)
+        @redis.del(percentage_key(feature))
+    end
+
     def deactivate_all(feature)
         @redis.del(group_key(feature))
         @redis.del(user_key(feature))
