@@ -1,7 +1,7 @@
 @@ -0,0 +1,17 @@
 = rollout
 
-Conditionally rollout features to certain users with redis.
+Conditionally roll out features with redis.
 
 == How it works
 
