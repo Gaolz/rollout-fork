@@ -4,6 +4,14 @@ class Rollout
         @groups = { "all" => lambda { |user| true} }
     end
 
+    def activate_globally(feature)
+        @redis.set(globaly_key(feature), feature)
+    end
+
+    def deactivate_globally(feature)
+        @redis.del(globaly_key(feature))
+    end
+
     def activate_group(feature, group)
         @redis.sadd(group_key(feature), group)
     end
@@ -32,15 +40,23 @@ class Rollout
         @redis.del(group_key(feature))
         @redis.del(user_key(feature))
         @redis.del(percentage_key(feature))
+        deactivate_globally(feature)
     end
 
     def define_group(group, &block)
         @groups[group.to_s] = block
     end
 
-    def active?(feature, user)
+    def active?(feature, user = nil)
         # @redis.smembers(group_key(feature)).any? { |group| @groups[group].call(user) }
-        user_in_active_group?(feature, user) || user_active?(feature, user) || user_in_active_percentage?(feature, user)
+        if user
+            active_globally?(feature) ||
+                user_in_active_group?(feature, user) ||
+                    user_active?(feature, user) ||
+                        user_within_active_percentage?(feature, user)
+        else
+            active_globally?(feature)
+        end
     end
 
     def info(feature)
@@ -67,6 +83,10 @@ class Rollout
         "#{key(name)}:percentage"
     end
 
+    private def globaly_key(name)
+        "#{key(name)}:global"
+    end
+
     private def active_groups(feature)
         @redis.smembers(group_key(feature)) || []
     end
@@ -79,6 +99,10 @@ class Rollout
         @redis.get(percentage_key(feature))
     end
 
+    private def active_globally?(feature)
+        @redis.get(global_key(feature))
+    end
+
     private def user_active?(feature, user)
         @redis.sismember(user_key(feature), user.id)
     end
@@ -89,7 +113,7 @@ class Rollout
         end
     end
 
-    private def user_in_active_percentage?(feature, user)
+    private def user_within_active_percentage?(feature, user)
         percentage = active_percentage(feature)
         return false if percentage.nil?
 
