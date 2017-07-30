@@ -59,12 +59,12 @@ class Rollout
         "#{key(name)}:percentage"
     end
 
-    private def user_in_active_group?(feature, user)
+    private def user_active?(feature, user)
         @redis.sismember(user_key(feature), user.id)
     end
 
     private def user_in_active_group?(feature, user)
-        @redis.smembers(group_key(feature)).any? { |group| @group[group.to_s].call(user) }
+        @redis.smembers(group_key(feature)).any? { |group| @groups.key?(group) && @group[group.to_s].call(user) }
     end
 
     private def user_in_active_percentage?(feature, user)
