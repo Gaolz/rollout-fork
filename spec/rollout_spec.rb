@@ -98,7 +98,7 @@ describe "Rollout" do
     describe "deactivating a specific user" do
         before do
             @rollout.activate_user(:chat, stub(:id => 42))
-            @rollout.activate_user(:chat, stub(:id => 42))
+            @rollout.activate_user(:chat, stub(:id => 24))
             @rollout.deactivate_user(:chat, stub(:id => 42))
         end
 
@@ -127,7 +127,7 @@ describe "Rollout" do
         end
 
         it "activating a feature for a percentage of users" do
-            (1..120).select { |id| @rollout.should be_active(:chat, stub(:id => id)) }.count.should == 39
+            (1..120).select { |id| @rollout.active?(:chat, stub(:id => id)) }.length.should == 39
         end
     end
 
@@ -200,7 +200,7 @@ describe "Rollout" do
             it "returns info about all the activations" do
                 @rollout.info(:chat).should == {
                     :percentage => 10,
-                    :groups       => [:greeters, :caretakers],
+                    :groups       => [:caretakers, :greeters],
                     :users         => [42],
                     :global        => [:signup]
                 }

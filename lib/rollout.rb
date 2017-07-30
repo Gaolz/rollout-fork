@@ -5,11 +5,11 @@ class Rollout
     end
 
     def activate_globally(feature)
-        @redis.sadd(globaly_key, feature)
+        @redis.sadd(global_key, feature)
     end
 
     def deactivate_globally(feature)
-        @redis.srem(globaly_key, feature)
+        @redis.srem(global_key, feature)
     end
 
     def activate_group(feature, group)
@@ -90,7 +90,7 @@ class Rollout
         "#{key(name)}:percentage"
     end
 
-    private def globaly_key
+    private def global_key
         "feature:__global__"
     end
 
@@ -120,7 +120,7 @@ class Rollout
 
     private def user_in_active_group?(feature, user)
         (@redis.smembers(group_key(feature)) || []).any? do |group|
-            @groups.key?(group) && @group[group.to_s].call(user)
+            @groups.key?(group) && @groups[group.to_s].call(user)
         end
     end
 
