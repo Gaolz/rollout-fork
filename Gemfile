@@ -5,3 +5,5 @@ gem "rake"
 gem "bourne"
 gem "mocha"
 gem "redis"
+
+gemspec
