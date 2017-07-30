@@ -5,11 +5,11 @@ class Rollout
     end
 
     def activate_globally(feature)
-        @redis.set(globaly_key(feature), feature)
+        @redis.sadd(globaly_key(feature), feature)
     end
 
     def deactivate_globally(feature)
-        @redis.del(globaly_key(feature))
+        @redis.srem(globaly_key(feature))
     end
 
     def activate_group(feature, group)
@@ -84,7 +84,7 @@ class Rollout
     end
 
     private def globaly_key(name)
-        "#{key(name)}:global"
+        "feature:__global__"
     end
 
     private def active_groups(feature)
@@ -100,7 +100,7 @@ class Rollout
     end
 
     private def active_globally?(feature)
-        @redis.get(global_key(feature))
+        @redis.sismember(global_key(feature), feature)
     end
 
     private def user_active?(feature, user)
