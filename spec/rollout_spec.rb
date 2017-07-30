@@ -112,7 +112,27 @@ describe "Rollout" do
         end
 
         it "activating a feature for a percentage of users" do
-            (1..120).select { |id| @rollout.should be_active(:chat, stub(:id => id)) }.count.should == 24
+            (1..120).select { |id| @rollout.should be_active(:chat, stub(:id => id)) }.count.should == 39
+        end
+    end
+
+    describe "activating a feature for a percentage of users" do
+        before do
+            @rollout.activate_percentage(:chat, 20)
+        end
+
+        it "activates the feature for that percentage of the users" do
+            (1..200).select { |id| @rollout.active?(:chat, stub(:id => id)) }.length.should == 40
+        end
+    end
+
+    describe "activating a feature for a percentage of users" do
+        before do
+            @rollout.activate_percentage(:chat, 5)
+        end
+
+        it "activates the feature for that percentage of the users" do
+            (1..100).select { |id| @rollout.active?(:chat, stub(:id => id)) }.length.should == 5
         end
     end
 
