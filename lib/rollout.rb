@@ -53,6 +53,14 @@ class Rollout
             end
         end
 
+        def to_hash
+            {
+                :percentage   => @percentage,
+                :groups         => @groups,
+                :users           => @users
+            }
+        end
+
         private def user_in_percentage?(user)
             user.id % 100 < @percentage
         end
