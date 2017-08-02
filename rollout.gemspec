@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "jeweler", "~> 1.6.4"
   s.add_development_dependency "bourne", "1.0"
   s.add_development_dependency  "mocha", "0.9.8"
+  s.add_development_dependency  "pry"
 
   s.add_runtime_dependency "redis"
 end
