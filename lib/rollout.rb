@@ -3,7 +3,7 @@ require "rollout/legacy"
 class Rollout
     class Feature
         attr_reader :name, :groups, :users, :percentage
-        attr_writer :percentage
+        attr_writer :percentage, :groups, :users
 
         def initialize(name, string = nil)
             @name = name
@@ -76,9 +76,10 @@ class Rollout
         end
     end
 
-    def initialize(redis)
+    def initialize(redis, opts = {})
         @redis = redis
         @groups = { :all => lambda { |user| true} }
+        @legacy  = Legacy.new(@redis) if opts[:legacy]
     end
 
     def activate_globally(feature)
@@ -151,7 +152,19 @@ class Rollout
     end
 
     def get(feature)
-        Feature.new(feature, @redis.get(key(feature)))
+        # Feature.new(feature, @redis.get(key(feature)))
+        string = @redis.get(key(feature))
+        if string || !legacy?
+            Feature.new(feature, string)
+        else
+            info = @legacy.info(feature)
+            f = Feature.new(feature)
+            f.percentage = info[:percentage]
+            f.groups = info[:groups]
+            f.users = info[:users]
+            save(f)
+            f
+        end
     end
 
     def features
@@ -175,5 +188,9 @@ class Rollout
     private def save(feature)
         @redis.set(key(feature.name), feature.serialize)
         @redis.sadd(features_key, feature.name)
+    end
+
+    private def legacy?
+        @legacy
     end
 end
