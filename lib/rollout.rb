@@ -130,12 +130,6 @@ class Rollout
         end
     end
 
-    def deactivate_all(feature)
-        with_feature(feature) do |f|
-            f.clear
-        end
-    end
-
     def define_group(group, &block)
         @groups[group] = block
     end
