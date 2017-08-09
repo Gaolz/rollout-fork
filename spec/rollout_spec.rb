@@ -271,7 +271,5 @@ describe "Rollout" do
             @legacy.activate_globally(:video_chat)
             @rollout.get(:video_chat).to_hash[:percentage].should == 100
         end
-
-
     end
 end
