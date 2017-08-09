@@ -1,8 +1,7 @@
 PATH
   remote: .
   specs:
-    rollout (1.2.0)
-      redis
+    rollout (2.0.0)
 
 GEM
   remote: https://gems.ruby-china.org/
