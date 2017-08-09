@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency  "mocha", "0.9.8"
   s.add_development_dependency  "pry"
 
-  s.add_runtime_dependency "redis"
+  s.add_development_dependency "redis"
 end
