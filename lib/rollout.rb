@@ -1,4 +1,5 @@
 require "rollout/legacy"
+require "zlib"
 
 class Rollout
     class Feature
@@ -10,7 +11,7 @@ class Rollout
             if string
                 raw_percentage, raw_users, raw_groups = string.split("|")
                 @percentage = raw_percentage.to_i
-                @users = (raw_users || "").split(",").map(&:to_i)
+                @users = (raw_users || "").split(",").map(&:to_s)
                 @groups = (raw_groups || "").split(",").map(&:to_sym)
             else
                 clear
@@ -22,15 +23,15 @@ class Rollout
         end
 
         def add_user(user)
-            @users << user.id unless @users.include?(user.id)
+            @users << user.id.to_s unless @users.include?(user.id.to_s)
         end
 
         def remove_user(user)
-            @users.delete(user.id.to_i)
+            @users.delete(user.id.to_s)
         end
 
         def add_group(group)
-            @groups << group unless @groups.include?(group)
+            @groups << group.to_sym unless @groups.include?(group.to_sym)
         end
 
         def remove_group(group)
@@ -62,11 +63,11 @@ class Rollout
         end
 
         private def user_in_percentage?(user)
-            user.id % 100 < @percentage
+            Zlib.crc32(user.id.to_s) % 100 < @percentage
         end
 
         private def user_in_active_users?(user)
-            @users.include?(user.id)
+            @users.include?(user.id.to_s)
         end
 
         private def user_in_active_group?(user, rollout)
@@ -131,7 +132,7 @@ class Rollout
     end
 
     def define_group(group, &block)
-        @groups[group] = block
+        @groups[group.to_sym] = block
     end
 
     def active?(feature, user = nil)
@@ -141,7 +142,7 @@ class Rollout
     end
 
     def active_in_group?(group, user)
-        f = @groups[group]
+        f = @groups[group.to_sym]
         f && f.call(user)
     end
 
@@ -153,8 +154,8 @@ class Rollout
             info = @legacy.info(feature)
             f = Feature.new(feature)
             f.percentage = info[:percentage]
-            f.groups = info[:groups]
-            f.users = info[:users]
+            f.groups = info[:groups].map { |g| g.to_sym }
+            f.users = info[:users].map { |u| u.to_s }
             save(f)
             f
         end
