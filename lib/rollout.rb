@@ -155,6 +155,10 @@ class Rollout
         end
     end
 
+    def inactive?(feature, user = nil)
+        !active(feature, user)
+    end
+
     def activate_percentage(feature, percentage)
         with_feature(feature) do |f|
             f.percentage = percentage
