@@ -8,7 +8,5 @@ require 'redis'
 require 'pry'
 
 RSpec.configure do |config|
-    config.mock_with :mocha
     config.before { Redis.new.flushdb }
-    config.expect_with(:rspec) { |c| c.syntax  = :should }
 end
