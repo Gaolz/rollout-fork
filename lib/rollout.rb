@@ -62,9 +62,9 @@ class Rollout
 
         def to_hash
             {
-                :percentage   => @percentage,
-                :groups         => @groups,
-                :users           => @users
+                percentage: @percentage,
+                groups: @groups,
+                users: @users
             }
         end
 
@@ -106,7 +106,7 @@ class Rollout
     def initialize(storage, opts = {})
         @storage = storage
         @options = opts
-        @groups = { :all => lambda { |user| true} }
+        @groups = { all: lambda { |user| true} }
         @legacy = Legacy.new(opts[:legacy_storage] || @storage) if opts[:migrate]
     end
 
