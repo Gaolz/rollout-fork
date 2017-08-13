@@ -49,7 +49,7 @@ DEPENDENCIES
   bourne
   bundler (>= 1.0.0)
   fakeredis
-  jeweler (~> 1.6.4)
+  jeweler
   mocha
   pry
   rake
