@@ -106,7 +106,6 @@ class Rollout
         @storage = storage
         @options = opts
         @groups = { all: lambda { |user| true} }
-        @legacy = Legacy.new(opts[:legacy_storage] || @storage) if opts[:migrate]
     end
 
     def activate(feature)
@@ -207,18 +206,7 @@ class Rollout
 
     def get(feature)
         string = @storage.get(key(feature))
-        if string || !migrate?
-            Feature.new(feature, string, @options)
-        else
-            info = @legacy.info(feature)
-            f = Feature.new(feature)
-            f.percentage = info[:percentage]
-            f.percentage = 100 if info[:global].include? feature
-            f.groups = info[:groups].map { |g| g.to_sym }
-            f.users = info[:users].map { |u| u.to_s }
-            save(f)
-            f
-        end
+        Feature.new(feature, string, @options)
     end
 
     def features
@@ -263,9 +251,5 @@ class Rollout
     private def save(feature)
         @storage.set(key(feature.name), feature.serialize)
         @storage.set(features_key, (features | [feature.name.to_sym]).join(","))
-    end
-
-    private def migrate?
-        @legacy
     end
 end
