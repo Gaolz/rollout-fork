@@ -162,7 +162,7 @@ class Rollout
     end
 
     def inactive?(feature, user = nil)
-        !active(feature, user)
+        !active?(feature, user)
     end
 
     def activate_percentage(feature, percentage)
