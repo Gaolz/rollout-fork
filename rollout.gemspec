@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency  "pry"
   s.add_development_dependency "redis"
   s.add_development_dependency "fakeredis"
+  s.add_development_dependency "simplecov"
 end
