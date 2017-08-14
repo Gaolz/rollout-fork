@@ -5,17 +5,6 @@ Feature flippers.
 [<img src="https://travis-ci.org/FetLife/rollout.svg?branch=master" alt="Build
 Status" />](https://travis-ci.org/FetLife/rollout)
 
-## MAKE SURE TO READ THIS: 2.X Changes and Migration Path
-
-As of rollout-2.x, only one key is used per feature for performance reasons.
-The serialized format is `percentage|user_id,user_id,...|group,_group...|data_json`. This has
-the effect of making concurrent feature modifications unsafe, but in practice,
-I doubt this will actually be a problem.
-
-This also has the effect of rollout no longer being dependent on redis. Just
-give it something that responds to `set(key,value)`, `get(key)` and
-`del(key)`.
-
 ## Install it
 
     gem install rollout
