@@ -1,6 +1,6 @@
 # rollout
 
-Feature flippers.
+Fast feature flags based on Redis.
 
 [<img src="https://travis-ci.org/FetLife/rollout.svg?branch=master" alt="Build
 Status" />](https://travis-ci.org/FetLife/rollout)
