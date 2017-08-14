@@ -8,7 +8,7 @@ Status" />](https://travis-ci.org/FetLife/rollout)
 ## MAKE SURE TO READ THIS: 2.X Changes and Migration Path
 
 As of rollout-2.x, only one key is used per feature for performance reasons.
-The data format is `percentage|user_id,user_id,...|group,_group...`. This has
+The serialized format is `percentage|user_id,user_id,...|group,_group...|data_json`. This has
 the effect of making concurrent feature modifications unsafe, but in practice,
 I doubt this will actually be a problem.
 
@@ -24,18 +24,30 @@ give it something that responds to `set(key,value)`, `get(key)` and
 
 Initialize a rollout object. I assign it to a global var.
 
-    require 'redis'
+```ruby
+require 'redis'
 
-    $redis   = Redis.new
-    $rollout = Rollout.new($redis)
+$redis   = Redis.new
+$rollout = Rollout.new($redis)
+```
 
 Check whether a feature is active for a particular user:
 
-    $rollout.active?(:chat, User.first) # => true/false
+```ruby
+$rollout.active?(:chat, User.first) # => true/false
+```
+
+Update data specific to a feature:
+
+```ruby
+@rollout.set_feature_data(:chat, description: 'foo', release_date: 'bar', whatever: 'baz')
+```
 
 Check whether a feature is active globally:
 
-    $rollout.active?(:chat)
+```ruby
+$rollout.active?(:chat)
+```
 
 You can activate features using a number of different mechanisms.
 
