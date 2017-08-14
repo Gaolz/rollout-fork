@@ -152,6 +152,10 @@ When a feature reaches "maturity" - in other words, expected to be at 100%
 rollout all the time - we use check_rollout.rb to setup nagios alerts on the
 rollouts so that we get paged if one of them gets disabled.
 
+## Frontend / UI
+
+* [Rollout-Dashboard](https://github.com/fiverr/rollout_dashboard/)
+
 ## Implementations in other languages
 
 *   Python: http://github.com/asenchi/proclaim
