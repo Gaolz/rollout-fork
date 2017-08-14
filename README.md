@@ -40,7 +40,7 @@ $rollout.active?(:chat, User.first) # => true/false
 Update data specific to a feature:
 
 ```ruby
-@rollout.set_feature_data(:chat, description: 'foo', release_date: 'bar', whatever: 'baz')
+$rollout.set_feature_data(:chat, description: 'foo', release_date: 'bar', whatever: 'baz')
 ```
 
 Check whether a feature is active globally:
