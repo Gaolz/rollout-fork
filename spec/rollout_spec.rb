@@ -220,6 +220,15 @@ RSpec.describe "Rollout" do
                 inactive_users.each { |user| expect(@rollout).not_to be_active(:chat, user) }
             end
         end
+
+        describe "set a group of users" do
+            it "should replace the users with the given array" do
+                users = %w(1 2 3 4)
+                @rollout.activate_users(:chat, %w(10 20 30))
+                @rollout.set_users(:chat, users)
+                expect(@rollout.get(:chat).users).to eq(users)
+            end
+        end
     end
 
     describe "activating a feature globally" do
